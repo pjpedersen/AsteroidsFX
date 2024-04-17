@@ -1,9 +1,16 @@
 package dk.sdu.mmmi.cbse.enemy;
 
+import dk.sdu.mmmi.cbse.common.bullet.BulletSPI;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
+import dk.sdu.mmmi.cbse.common.data.GameKeys;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
+
+import java.util.Collection;
+import java.util.ServiceLoader;
+
+import static java.util.stream.Collectors.toList;
 
 public class EnemyControlSystem implements IEntityProcessingService {
     private World world;
@@ -15,7 +22,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
         this.gameData = gameData;
 
         checkMovement();
-        //shoot();
+        shoot();
 
     }
 
@@ -37,7 +44,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
             if (e.getY() > gameData.getDisplayHeight()) {
                 e.setY(gameData.getDisplayHeight()-1);
             }
-            double randomInt = getRandomMovementInput(1, 4);
+            double randomInt = getRandomInput(1, 4);
                 if (randomInt == 1) {
                     e.setRotation(e.getRotation() + 5);
                 }
@@ -54,7 +61,27 @@ public class EnemyControlSystem implements IEntityProcessingService {
     }
 
 
-    public int getRandomMovementInput(int min, int max) {
+    public int getRandomInput(int min, int max) {
         return (int) ((Math.random() * (max - min)) + min);
+    }
+
+    public void shoot() {
+
+        int randomInt = getRandomInput(0,3);
+
+        for (Entity e : world.getEntities(Enemy.class)) {
+            if (randomInt == 1) {
+                System.out.println("enemy shooting");
+                getBulletSPIs().stream().findFirst().ifPresent(
+                        spi -> {
+                            world.addEntity(spi.createBullet(e, gameData));
+                        }
+                );
+            }
+        }
+    }
+
+    private Collection<? extends BulletSPI> getBulletSPIs() {
+        return ServiceLoader.load(BulletSPI.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 }
