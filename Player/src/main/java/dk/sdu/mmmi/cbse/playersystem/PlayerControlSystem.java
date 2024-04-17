@@ -15,15 +15,27 @@ import static java.util.stream.Collectors.toList;
 
 public class PlayerControlSystem implements IEntityProcessingService {
 
+    private World world;
+    private GameData gameData;
+
     @Override
     public void process(GameData gameData, World world) {
-            
+        this.world = world;
+        this.gameData = gameData;
+
+        checkMovement();
+        shoot();
+
+
+    }
+    public void checkMovement() {
         for (Entity player : world.getEntities(Player.class)) {
             if (gameData.getKeys().isDown(GameKeys.LEFT)) {
-                player.setRotation(player.getRotation() - 5);                
+                player.setRotation(player.getRotation() - 5);
+
             }
             if (gameData.getKeys().isDown(GameKeys.RIGHT)) {
-                player.setRotation(player.getRotation() + 5);                
+                player.setRotation(player.getRotation() + 5);
             }
             if (gameData.getKeys().isDown(GameKeys.UP)) {
                 double changeX = Math.cos(Math.toRadians(player.getRotation()));
@@ -31,24 +43,35 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 player.setX(player.getX() + changeX);
                 player.setY(player.getY() + changeY);
             }
-            
-        if (player.getX() < 0) {
-            player.setX(1);
-        }
 
-        if (player.getX() > gameData.getDisplayWidth()) {
-            player.setX(gameData.getDisplayWidth()-1);
-        }
+            if (player.getX() < 0) {
+                player.setX(1);
+            }
 
-        if (player.getY() < 0) {
-            player.setY(1);
-        }
+            if (player.getX() > gameData.getDisplayWidth()) {
+                player.setX(gameData.getDisplayWidth()-1);
+            }
 
-        if (player.getY() > gameData.getDisplayHeight()) {
-            player.setY(gameData.getDisplayHeight()-1);
+            if (player.getY() < 0) {
+                player.setY(1);
+            }
+
+            if (player.getY() > gameData.getDisplayHeight()) {
+                player.setY(gameData.getDisplayHeight()-1);
+            }
         }
-            
-                                        
+    }
+
+    public void shoot() {
+        for (Entity player : world.getEntities(Player.class)) {
+            if (gameData.getKeys().isPressed(GameKeys.SPACE)) {
+                System.out.println("space pressedddddd");
+                getBulletSPIs().stream().findFirst().ifPresent(
+                        spi -> {
+                            world.addEntity(spi.createBullet(player, gameData));
+                        }
+                );
+            }
         }
     }
 
