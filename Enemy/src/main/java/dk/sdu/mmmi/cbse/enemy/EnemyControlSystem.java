@@ -22,12 +22,27 @@ public class EnemyControlSystem implements IEntityProcessingService {
     public void checkMovement() {
 
         for (Entity e : world.getEntities(Enemy.class)) {
-            double randomInt = getRandomMovementInput(1, 3);
+            if (e.getX() < 0) {
+                e.setX(1);
+            }
+
+            if (e.getX() > gameData.getDisplayWidth()) {
+                e.setX(gameData.getDisplayWidth()-1);
+            }
+
+            if (e.getY() < 0) {
+                e.setY(1);
+            }
+
+            if (e.getY() > gameData.getDisplayHeight()) {
+                e.setY(gameData.getDisplayHeight()-1);
+            }
+            double randomInt = getRandomMovementInput(1, 4);
                 if (randomInt == 1) {
-                    e.setRotation(e.getRotation() + Math.random());
+                    e.setRotation(e.getRotation() + 5);
                 }
                 if (randomInt == 2) {
-                    e.setRotation(e.getRotation() - Math.random());
+                    e.setRotation(e.getRotation() - 5);
                 }
                 if (randomInt == 3) {
                     double changeX = Math.cos(Math.toRadians(e.getRotation()));
