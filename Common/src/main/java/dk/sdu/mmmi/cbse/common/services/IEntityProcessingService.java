@@ -7,7 +7,7 @@ public interface IEntityProcessingService {
 
     /**
      *
-     *
+     * Interface contract responsible for processing entities and their cycle.
      *
      * @param gameData
      * @param world

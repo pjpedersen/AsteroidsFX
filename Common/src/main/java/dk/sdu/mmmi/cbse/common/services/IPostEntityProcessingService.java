@@ -9,5 +9,10 @@ import dk.sdu.mmmi.cbse.common.data.World;
  */
 public interface IPostEntityProcessingService {
 
+    /**
+     * Interface contract responsible for processing entities post interaction.
+     * @param gameData
+     * @param world
+     */
     void process(GameData gameData, World world);
 }
