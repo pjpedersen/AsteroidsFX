@@ -71,7 +71,6 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
         for (Entity e : world.getEntities(Enemy.class)) {
             if (randomInt == 1) {
-                System.out.println("enemy shooting");
                 getBulletSPIs().stream().findFirst().ifPresent(
                         spi -> {
                             world.addEntity(spi.createBullet(e, gameData));
