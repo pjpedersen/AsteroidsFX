@@ -43,6 +43,6 @@ public class CollisionControlSystem implements IPostEntityProcessingService {
         double dx = x2 - x1;
         double dy = y2 - y1;
         float distance = (float) Math.sqrt(dx * dx + dy * dy);
-        return distance <= 0.5;
+        return distance <=  (entity1.getRadius() + entity2.getRadius());
     }
 }
