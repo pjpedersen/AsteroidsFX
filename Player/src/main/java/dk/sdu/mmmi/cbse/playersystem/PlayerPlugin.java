@@ -21,11 +21,14 @@ public class PlayerPlugin implements IGamePluginService {
 
     private Entity createPlayerShip(GameData gameData) {
 
+        int sizeUnit = 10;
         Entity playerShip = new Player();
         playerShip.setPolygonCoordinates(-5,-5,10,0,-5,5);
         playerShip.setX(gameData.getDisplayHeight()/2);
         playerShip.setY(gameData.getDisplayWidth()/2);
         playerShip.setLifePoints(10);
+        playerShip.setRadius(sizeUnit);
+
         return playerShip;
     }
 

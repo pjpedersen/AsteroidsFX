@@ -12,6 +12,7 @@ public class Entity implements Serializable {
     private double y;
     private double rotation;
     private double lifePoints;
+    private float radius;
             
 
     public String getID() {
@@ -60,6 +61,12 @@ public class Entity implements Serializable {
     public double getLifePoints() {
         return lifePoints;
     }
-        
 
+    public void setRadius(float radius) {
+        this.radius = radius;
+    }
+
+    public float getRadius() {
+        return radius;
+    }
 }
