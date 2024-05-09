@@ -102,6 +102,7 @@ public class Main extends Application {
                 update();
                 draw();
                 gameData.getKeys().update();
+                removeUnusedDraws();
             }
 
         }.start();
@@ -114,24 +115,38 @@ public class Main extends Application {
             entityProcessorService.process(gameData, world);
         }
 
-//        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
-//            postEntityProcessorService.process(gameData, world);
-//        }
+        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
+           postEntityProcessorService.process(gameData, world);
+        }
     }
 
     private void draw() {
         for (Entity entity : world.getEntities()) {
             Polygon polygon = polygons.get(entity);
+
             if (polygon == null) {
                 polygon = new Polygon(entity.getPolygonCoordinates());
                 polygons.put(entity, polygon);
                 gameWindow.getChildren().add(polygon);
             }
+
             polygon.setTranslateX(entity.getX());
             polygon.setTranslateY(entity.getY());
             polygon.setRotate(entity.getRotation());
         }
 
+    }
+
+    private void removeUnusedDraws() {
+        List<Entity> entities = new ArrayList<>(world.getEntities());
+        for (Entity entity : polygons.keySet()) {
+            if (!entities.contains(entity)) {
+              if(gameWindow.getChildren().contains(polygons.get(entity))) {
+                gameWindow.getChildren().remove(polygons.get(entity));
+              }
+                polygons.remove(entity);
+            }
+        }
     }
 
 
