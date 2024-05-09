@@ -21,10 +21,11 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
 
     @Override
     public Entity createAsteroid(GameData gameData) {
-        Entity asteroid = new Entity();
+        Entity asteroid = new Asteroid();
         asteroid.setPolygonCoordinates(-5,-5,5,-5,5,5,-5,5);
         asteroid.setX(gameData.getDisplayHeight()/3);
         asteroid.setY(gameData.getDisplayWidth()/3);
+        asteroid.setLifePoints(3);
         return asteroid;
     }
 
