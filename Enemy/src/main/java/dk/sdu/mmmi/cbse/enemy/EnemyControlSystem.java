@@ -29,20 +29,20 @@ public class EnemyControlSystem implements IEntityProcessingService {
     public void checkMovement() {
 
         for (Entity e : world.getEntities(Enemy.class)) {
-            if (e.getX() < 0) {
-                e.setX(1);
+            if (e.getX() < 10) {
+                e.setX(11);
             }
 
-            if (e.getX() > gameData.getDisplayWidth()) {
-                e.setX(gameData.getDisplayWidth()-1);
+            if (e.getX() > gameData.getDisplayWidth()-10) {
+                e.setX(gameData.getDisplayWidth()-11);
             }
 
-            if (e.getY() < 0) {
-                e.setY(1);
+            if (e.getY() < 10) {
+                e.setY(11);
             }
 
-            if (e.getY() > gameData.getDisplayHeight()) {
-                e.setY(gameData.getDisplayHeight()-1);
+            if (e.getY() > gameData.getDisplayHeight()-10) {
+                e.setY(gameData.getDisplayHeight()-11);
             }
             double randomInt = getRandomInput(1, 4);
                 if (randomInt == 1) {
@@ -67,7 +67,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
     public void shoot() {
 
-        int randomInt = getRandomInput(0,3);
+        int randomInt = getRandomInput(0,50);
 
         for (Entity e : world.getEntities(Enemy.class)) {
             if (randomInt == 1) {
