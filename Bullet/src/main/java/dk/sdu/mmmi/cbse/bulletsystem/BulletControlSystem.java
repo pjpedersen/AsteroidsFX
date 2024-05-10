@@ -35,6 +35,9 @@ public class BulletControlSystem implements IEntityProcessingService, BulletSPI 
             bullet.setX(bullet.getX() + changeX * 3);
             bullet.setY(bullet.getY() + changeY * 3);
 
+            if(bullet.getX() < 0 || bullet.getX() > gameData.getDisplayWidth() || bullet.getY() < 0 || bullet.getY() > gameData.getDisplayHeight()) {
+                world.removeEntity(bullet);
+            }
 
 
 
@@ -46,10 +49,14 @@ public class BulletControlSystem implements IEntityProcessingService, BulletSPI 
 
             Entity bullet = new Bullet();
             bullet.setPolygonCoordinates(1, -1, 1, 1, -1, 1, -1, -1);
-            bullet.setX(shooter.getX());
-            bullet.setY(shooter.getY());
+            double changeX = Math.cos(Math.toRadians(shooter.getRotation()));
+            double changeY = Math.sin(Math.toRadians(shooter.getRotation()));
+            bullet.setX(shooter.getX() + changeX * 10);
+            bullet.setY(shooter.getY() + changeY * 10);
             bullet.setRotation(shooter.getRotation());
+            bullet.setRadius(1);
             bullet.setLifePoints(20);
+
 
         return bullet;
         }
