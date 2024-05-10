@@ -138,9 +138,8 @@ public class Main extends Application {
     }
 
     private void removeUnusedDraws() {
-        List<Entity> entities = new ArrayList<>(world.getEntities());
         for (Entity entity : polygons.keySet()) {
-            if (!entities.contains(entity)) {
+            if (!world.getEntities().contains(entity)) {
               if(gameWindow.getChildren().contains(polygons.get(entity))) {
                 gameWindow.getChildren().remove(polygons.get(entity));
               }
