@@ -18,6 +18,7 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
         this.world = world;
         addAsteroid(gameData, world);
         moveAsteroids();
+        checkForSplit();
     }
 
     @Override
@@ -26,12 +27,42 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
         double randomX = getRandomInput(1, gameData.getDisplayWidth());
         double randomY = getRandomInput(1, gameData.getDisplayHeight());
         Entity asteroid = new Asteroid();
-        asteroid.setPolygonCoordinates(-5,-5,5,-5,5,5,-5,5);
+        asteroid.setPolygonCoordinates(-10,-10,10,-10,10,10,-10,10);
         asteroid.setX(randomX);
         asteroid.setY(randomY);
-        asteroid.setLifePoints(3);
+        asteroid.setLifePoints(101);
         asteroid.setRadius(sizeUnit);
         return asteroid;
+    }
+
+    @Override
+    public void splitAsteroid(Entity entity) {
+        if(!((Asteroid)entity).isSplit()) {
+            Entity asteroid1 = createAsteroid(gameData);
+            Entity asteroid2 = createAsteroid(gameData);
+            asteroid1.setX(entity.getX()+10);
+            asteroid1.setY(entity.getY()+10);
+            asteroid2.setX(entity.getX()+20);
+            asteroid2.setY(entity.getY()+20);
+            asteroid1.setPolygonCoordinates(-5,-5,5,-5,5,5,-5,5);
+            asteroid2.setPolygonCoordinates(-5,-5,5,-5,5,5,-5,5);
+            asteroid1.setRadius(5);
+            asteroid2.setRadius(5);
+            ((Asteroid)asteroid1).setSplit(true);
+            ((Asteroid)asteroid2).setSplit(true);
+            world.removeEntity(entity);
+            world.addEntity(asteroid1);
+            world.addEntity(asteroid2);
+
+        }
+    }
+
+    public void checkForSplit() {
+        for(Entity e : world.getEntities(Asteroid.class)) {
+            if(e.getLifePoints() <= 100) {
+                splitAsteroid(e);
+            }
+        }
     }
 
     public int checkSpawnedAsteroids() {
@@ -55,15 +86,18 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
     public void moveAsteroids() {
 
         for (Entity e : world.getEntities(Asteroid.class)) {
-            if (e.getX() < 0) {
-                e.setX(1);
-            }
-
-            if (e.getX() > gameData.getDisplayWidth()) {
+            if (e.getX() <= 0) {
                 e.setX(gameData.getDisplayWidth()-1);
             }
 
-            if (e.getY() < 0) {
+            if (e.getX() >= gameData.getDisplayWidth()) {
+                e.setX(1);
+            }
+
+            if (e.getY() <= 0) {
+                e.setY(gameData.getDisplayHeight()-1);
+            }
+            if (e.getY() >= gameData.getDisplayHeight()) {
                 e.setY(1);
             }
 
