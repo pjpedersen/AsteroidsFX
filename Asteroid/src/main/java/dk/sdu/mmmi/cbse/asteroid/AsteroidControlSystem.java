@@ -1,6 +1,6 @@
 package dk.sdu.mmmi.cbse.asteroid;
 
-import dk.sdu.mmmi.cbse.common.asteroid.Asteroid;
+import dk.sdu.mmmi.cbse.common.asteroid.CommonAsteroidEntity;
 import dk.sdu.mmmi.cbse.common.asteroid.AsteroidSPI;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
@@ -26,7 +26,7 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
         int sizeUnit = 10;
         double randomX = getRandomInput(1, gameData.getDisplayWidth());
         double randomY = getRandomInput(1, gameData.getDisplayHeight());
-        Entity asteroid = new Asteroid();
+        Entity asteroid = new CommonAsteroidEntity();
         asteroid.setPolygonCoordinates(-10,-10,10,-10,10,10,-10,10);
         asteroid.setX(randomX);
         asteroid.setY(randomY);
@@ -37,7 +37,7 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
 
     @Override
     public void splitAsteroid(Entity entity) {
-        if(!((Asteroid)entity).isSplit()) {
+        if(!((CommonAsteroidEntity)entity).isSplit()) {
             Entity asteroid1 = createAsteroid(gameData);
             Entity asteroid2 = createAsteroid(gameData);
             asteroid1.setX(entity.getX()+10);
@@ -48,17 +48,16 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
             asteroid2.setPolygonCoordinates(-5,-5,5,-5,5,5,-5,5);
             asteroid1.setRadius(5);
             asteroid2.setRadius(5);
-            ((Asteroid)asteroid1).setSplit(true);
-            ((Asteroid)asteroid2).setSplit(true);
+            ((CommonAsteroidEntity)asteroid1).setSplit(true);
+            ((CommonAsteroidEntity)asteroid2).setSplit(true);
             world.removeEntity(entity);
             world.addEntity(asteroid1);
             world.addEntity(asteroid2);
-
         }
     }
 
     public void checkForSplit() {
-        for(Entity e : world.getEntities(Asteroid.class)) {
+        for(Entity e : world.getEntities(CommonAsteroidEntity.class)) {
             if(e.getLifePoints() <= 100) {
                 splitAsteroid(e);
             }
@@ -68,7 +67,7 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
     public int checkSpawnedAsteroids() {
         int asteroidCounter = 0;
         for(Entity e : world.getEntities()) {
-            if(e.getClass() == Asteroid.class) {
+            if(e.getClass() == CommonAsteroidEntity.class) {
                 asteroidCounter++;
             }
             //System.out.println("asteroidCounter = "+asteroidCounter); DEBUGGING COUNTER
@@ -85,7 +84,7 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
 
     public void moveAsteroids() {
 
-        for (Entity e : world.getEntities(Asteroid.class)) {
+        for (Entity e : world.getEntities(CommonAsteroidEntity.class)) {
             if (e.getX() <= 0) {
                 e.setX(gameData.getDisplayWidth()-1);
             }
