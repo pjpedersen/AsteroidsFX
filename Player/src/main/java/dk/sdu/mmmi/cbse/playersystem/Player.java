@@ -1,11 +1,11 @@
 package dk.sdu.mmmi.cbse.playersystem;
 
-import dk.sdu.mmmi.cbse.common.player.CommonPlayerEntity;
+import dk.sdu.mmmi.cbse.common.player.CommonEntity;
 
 /**
  *
  * @author Emil
  */
-public class Player extends CommonPlayerEntity {
+public class Player extends CommonEntity {
 
 }

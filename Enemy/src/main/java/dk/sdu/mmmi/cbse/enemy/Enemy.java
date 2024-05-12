@@ -1,6 +1,5 @@
 package dk.sdu.mmmi.cbse.enemy;
-import dk.sdu.mmmi.cbse.common.data.Entity;
-import dk.sdu.mmmi.cbse.common.enemy.CommonEnemyEntity;
+import dk.sdu.mmmi.cbse.common.enemy.CommonEntity;
 
-public class Enemy extends CommonEnemyEntity {
+public class Enemy extends CommonEntity {
 }
