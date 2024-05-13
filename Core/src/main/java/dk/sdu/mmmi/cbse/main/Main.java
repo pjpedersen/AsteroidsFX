@@ -40,7 +40,8 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        Path pluginDirectory = Paths.get("plugins");
+        String pluginDirReference = "plugins";
+        Path pluginDirectory = Paths.get(pluginDirReference);
 
         ModuleFinder pluginFinder = ModuleFinder.of(pluginDirectory);
 
