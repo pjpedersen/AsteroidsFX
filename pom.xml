@@ -20,7 +20,6 @@
         <module>Collision</module>
         <module>Asteroid</module>
         <module>CommonAsteroid</module>
-
         <module>CommonEnemy</module>
         <module>CommonPlayer</module>
         <module>ScoreSystem</module>
