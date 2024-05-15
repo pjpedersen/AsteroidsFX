@@ -3,6 +3,7 @@ package dk.sdu.mmmi.cbse.scoresystem;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +28,7 @@ public class ScoringSystemSpring {
     }
 
     @PutMapping("/score/add/{value}")
-    public void addScore(long value) {
+    public void addScore(@PathVariable long value) {
         if(value > 0) {
             scoreCounter += value;
         }
