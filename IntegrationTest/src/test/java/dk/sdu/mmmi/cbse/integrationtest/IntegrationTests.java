@@ -8,23 +8,18 @@ import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.GameKeys;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.enemy.CommonEnemyEntity;
-import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
-import dk.sdu.mmmi.cbse.enemy.EnemyControlSystem;
 import dk.sdu.mmmi.cbse.playersystem.Player;
 import dk.sdu.mmmi.cbse.playersystem.PlayerControlSystem;
+import dk.sdu.mmmi.cbse.enemy.EnemyControlSystem;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ServiceLoader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class IntegrationTests {
@@ -37,6 +32,9 @@ public class IntegrationTests {
     private Entity asteroidTwo;
     private Entity enemy;
     private CollisionControlSystem collisionControlSystem;
+    private PlayerControlSystem playerControlSystem;
+    private AsteroidControlSystem asteroidControlSystem;
+    private EnemyControlSystem enemyControlSystem;
     private List<Entity> entities;
 
     @Before
@@ -50,8 +48,11 @@ public class IntegrationTests {
         gameKeys = mock(GameKeys.class);
         when(gameData.getKeys()).thenReturn(gameKeys);
 
-        // Create controlsystems
+        // Create control systems
         collisionControlSystem = new CollisionControlSystem();
+        playerControlSystem = new PlayerControlSystem();
+        asteroidControlSystem = new AsteroidControlSystem();
+        enemyControlSystem = new EnemyControlSystem();
 
         // Create and set up generic Entity instances
         player = mock(Player.class);
@@ -85,11 +86,42 @@ public class IntegrationTests {
             return null;
         }).when(world).addEntity(any(Entity.class));
 
+        // Mock the removeEntity method to remove from our local list
+        doAnswer(invocation -> {
+            Entity entity = invocation.getArgument(0);
+            entities.remove(entity);
+            return null;
+        }).when(world).removeEntity(any(Entity.class));
+
         // Mock the getEntities method to return entities from our local list
         when(world.getEntities()).thenReturn(entities);
-        when(world.getEntities(Player.class)).thenReturn(Collections.singletonList(player));
-        when(world.getEntities(CommonAsteroidEntity.class)).thenReturn(Collections.singletonList(asteroid));
-        when(world.getEntities(CommonEnemyEntity.class)).thenReturn(Collections.singletonList(enemy));
+        when(world.getEntities(Player.class)).thenAnswer(invocation -> {
+            List<Entity> players = new ArrayList<>();
+            for (Entity entity : entities) {
+                if (entity instanceof Player) {
+                    players.add(entity);
+                }
+            }
+            return players;
+        });
+        when(world.getEntities(CommonAsteroidEntity.class)).thenAnswer(invocation -> {
+            List<Entity> asteroids = new ArrayList<>();
+            for (Entity entity : entities) {
+                if (entity instanceof CommonAsteroidEntity) {
+                    asteroids.add(entity);
+                }
+            }
+            return asteroids;
+        });
+        when(world.getEntities(CommonEnemyEntity.class)).thenAnswer(invocation -> {
+            List<Entity> enemies = new ArrayList<>();
+            for (Entity entity : entities) {
+                if (entity instanceof CommonEnemyEntity) {
+                    enemies.add(entity);
+                }
+            }
+            return enemies;
+        });
 
         // Add entities to the mocked world
         world.addEntity(player);
@@ -103,10 +135,41 @@ public class IntegrationTests {
         assertTrue(world.getEntities().contains(asteroid));
         assertTrue(world.getEntities().contains(enemy));
 
-
         // Test collision between player and asteroid
         assertTrue(collisionControlSystem.checkCollision(player, enemy));
-
         assertTrue(collisionControlSystem.checkCollision(asteroid, asteroidTwo));
+    }
+
+    @Test
+    public void testComponentRemovalAtRuntime() {
+        // Process game data with all control systems
+        playerControlSystem.process(gameData, world);
+        asteroidControlSystem.process(gameData, world);
+        enemyControlSystem.process(gameData, world);
+        collisionControlSystem.process(gameData, world);
+
+        // Verify player entity is present
+        Entity player = world.getEntities(Player.class).iterator().next();
+        assertNotNull(player);
+
+        // Remove player entity at runtime
+        world.removeEntity(player);
+
+        // Verify player entity is removed
+        System.out.println("Entities after removal: " + world.getEntities());
+        System.out.println("Player entities after removal: " + world.getEntities(Player.class));
+
+        // Process game data again to ensure game continues to function
+        playerControlSystem.process(gameData, world);
+        asteroidControlSystem.process(gameData, world);
+        enemyControlSystem.process(gameData, world);
+        collisionControlSystem.process(gameData, world);
+
+        // Verify player entity is removed
+        assertTrue(world.getEntities(Player.class).isEmpty());
+
+        // Verify other entities still exist and game is functional
+        assertFalse(world.getEntities(CommonAsteroidEntity.class).isEmpty());
+        assertFalse(world.getEntities(CommonEnemyEntity.class).isEmpty());
     }
 }
