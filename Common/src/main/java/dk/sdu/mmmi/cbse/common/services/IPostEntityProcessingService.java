@@ -4,15 +4,14 @@ import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 
 /**
- *
- * @author jcs
+ * Interface contract responsible for processing entities post interaction.
  */
 public interface IPostEntityProcessingService {
 
     /**
-     * Interface contract responsible for processing entities post interaction.
-     * @param gameData
-     * @param world
+     * Method to process the entities post interaction
+     * @param gameData GameData object containing the game data
+     * @param world World object containing the game world
      */
     void process(GameData gameData, World world);
 }

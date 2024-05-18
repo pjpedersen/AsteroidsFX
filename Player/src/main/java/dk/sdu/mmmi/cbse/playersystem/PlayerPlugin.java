@@ -4,13 +4,21 @@ import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
+
+/**
+ * PlayerPlugin class responsible for starting and stopping Player module with entities
+ */
 public class PlayerPlugin implements IGamePluginService {
 
     private Entity player;
 
-    public PlayerPlugin() {
-    }
-
+    /**
+     * Method to start the Player module
+     * @param gameData GameData object containing the game data
+     * @param world World object containing the game world
+     * Precondition: gameData and world are not null
+     * The Player component starts and player entity has been created
+     */
     @Override
     public void start(GameData gameData, World world) {
 
@@ -19,6 +27,11 @@ public class PlayerPlugin implements IGamePluginService {
         world.addEntity(player);
     }
 
+    /**
+     * Method to create a player ship
+     * @param gameData GameData object containing the game data
+     * @return Entity object containing the player ship
+     */
     private Entity createPlayerShip(GameData gameData) {
 
         int sizeUnit = 3;
@@ -32,6 +45,13 @@ public class PlayerPlugin implements IGamePluginService {
         return playerShip;
     }
 
+    /**
+     * Method to stop the Player module
+     * @param gameData GameData object containing the game data
+     * @param world World object containing the game world
+     * Precondition: gameData and world are not null
+     * Postcondition: The Player component stops and player entity has been removed
+     */
     @Override
     public void stop(GameData gameData, World world) {
         // Remove entities

@@ -24,6 +24,10 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * Class responsible for game loop and updating game state.
+ */
+
 public class Main extends Application {
 
     private final GameData gameData = new GameData();
@@ -37,6 +41,11 @@ public class Main extends Application {
         launch(Main.class);
     }
 
+    /**
+     * Method to start the game window
+     * @param window Stage object containing the game window
+     * @throws Exception Exception object containing the exception
+     */
     @Override
     public void start(Stage window) throws Exception {
         Text text = new Text(10, 20, "Destroyed asteroids: 0");
@@ -93,6 +102,9 @@ public class Main extends Application {
 
     }
 
+    /**
+     * Method to render and run the game loop via the AnimationTimer class
+     */
     private void render() {
         new AnimationTimer() {
             private long then = 0;
@@ -108,6 +120,9 @@ public class Main extends Application {
         }.start();
     }
 
+    /**
+     * Method to update the game state
+     */
     private void update() {
 
         // Update
@@ -120,6 +135,9 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Method to draw the game state
+     */
     private void draw() {
         for (Entity entity : world.getEntities()) {
             Polygon polygon = polygons.get(entity);
@@ -137,6 +155,9 @@ public class Main extends Application {
 
     }
 
+    /**
+     * Method to remove unused draws
+     */
     private void removeUnusedDraws() {
         for (Entity entity : polygons.keySet()) {
             if (!world.getEntities().contains(entity)) {
@@ -150,14 +171,26 @@ public class Main extends Application {
 
 
 
+    /**
+     * Method to get all the game plugin services
+     * @return Collection object containing the game plugin services
+     */
     private Collection<? extends IGamePluginService> getPluginServices() {
         return ServiceLoader.load(IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 
+    /**
+     * Method to get all the entity processing services
+     * @return Collection object containing the entity processing services
+     */
     private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
         return ServiceLoader.load(IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 
+    /**
+     * Method to get all the post entity processing services
+     * @return Collection object containing the post entity processing services
+     */
     private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
         return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }

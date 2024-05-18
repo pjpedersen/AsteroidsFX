@@ -7,6 +7,10 @@ import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
+/**
+ *  * AsteroidControlSystem class responsible for controlling Asteroid module logic
+ */
+
 public class AsteroidControlSystem implements IEntityProcessingService, AsteroidSPI {
 
     private World world;
@@ -21,6 +25,11 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
         checkForSplit();
     }
 
+    /**
+     * Creates an asteroid entity with a random position and fixed size.
+     * @param gameData display width and height
+     * @return created asteroid entity
+     */
     @Override
     public Entity createAsteroid(GameData gameData) {
         int sizeUnit = 10;
@@ -35,6 +44,10 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
         return asteroid;
     }
 
+    /**
+     * Splits an asteroid entity into two smaller asteroids.
+     * @param entity
+     */
     @Override
     public void splitAsteroid(Entity entity) {
         if(!((CommonAsteroidEntity)entity).isSplit()) {
@@ -56,6 +69,10 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
         }
     }
 
+    /**
+     * Checks if an asteroid entity has less than or equal to 100 life points.
+     * If true, the asteroid entity is split into two smaller asteroids.
+     */
     public void checkForSplit() {
         for(Entity e : world.getEntities(CommonAsteroidEntity.class)) {
             if(e.getLifePoints() <= 100) {
@@ -64,6 +81,10 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
         }
     }
 
+    /**
+     * Checks the number of spawned asteroids in the world.
+     * @return number of spawned asteroids
+     */
     public int checkSpawnedAsteroids() {
         int asteroidCounter = 0;
         for(Entity e : world.getEntities()) {
@@ -75,6 +96,11 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
         return asteroidCounter;
     }
 
+    /**
+     * Adds an asteroid entity to the world if the number of spawned asteroids is less than 5.
+     * @param gameData display width and height
+     * @param world containing all entities
+     */
     public void addAsteroid(GameData gameData, World world) {
         if (checkSpawnedAsteroids() < 5) {
             Entity asteroid = createAsteroid(gameData);
@@ -82,6 +108,9 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
         }
     }
 
+    /**
+     * Moves all asteroid entities in the world.
+     */
     public void moveAsteroids() {
 
         for (Entity e : world.getEntities(CommonAsteroidEntity.class)) {
@@ -99,8 +128,6 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
             if (e.getY() >= gameData.getDisplayHeight()) {
                 e.setY(1);
             }
-
-
                     double changeX = Math.cos(Math.toRadians(e.getRotation()));
                     double changeY = Math.sin(Math.toRadians(e.getRotation()));
                     e.setX(e.getX() + changeX);
@@ -109,6 +136,12 @@ public class AsteroidControlSystem implements IEntityProcessingService, Asteroid
         }
     }
 
+    /**
+     * Generates a random integer between a minimum and maximum value.
+     * @param min minimum value
+     * @param max maximum value
+     * @return random integer
+     */
     public int getRandomInput(int min, int max) {
         return (int) ((Math.random() * (max - min)) + min);
     }

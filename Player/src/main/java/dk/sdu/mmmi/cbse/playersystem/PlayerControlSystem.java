@@ -9,25 +9,35 @@ import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
 import java.util.Collection;
 import java.util.ServiceLoader;
-
 import static java.util.stream.Collectors.toList;
 
 
+/**
+ * PlayerControlSystem class responsible for controlling Player module logic
+ */
 public class PlayerControlSystem implements IEntityProcessingService {
 
     private World world;
     private GameData gameData;
 
+    /**
+     * Method to process the entities
+     * @param gameData GameData object containing the game data
+     * @param world World object containing the game world
+     * Precondition: gameData and world are not null
+     * Postcondition: The entities have been processed
+     */
     @Override
     public void process(GameData gameData, World world) {
         this.world = world;
         this.gameData = gameData;
-
         checkMovement();
         shoot();
-
-
     }
+
+    /**
+     * Method to check the movement of the entities
+     */
     public void checkMovement() {
         for (Entity player : world.getEntities(Player.class)) {
             if (gameData.getKeys().isDown(GameKeys.LEFT)) {
@@ -62,10 +72,12 @@ public class PlayerControlSystem implements IEntityProcessingService {
         }
     }
 
+    /**
+     * Method to shoot a bullet
+     */
     public void shoot() {
         for (Entity player : world.getEntities(Player.class)) {
             if (gameData.getKeys().isDown(GameKeys.SPACE)) {
-                System.out.println("space pressedddddd");
                 getBulletSPIs().stream().findFirst().ifPresent(
                         spi -> {
                             world.addEntity(spi.createBullet(player, gameData));
@@ -75,6 +87,10 @@ public class PlayerControlSystem implements IEntityProcessingService {
         }
     }
 
+    /**
+     * Method to get the BulletSPIs
+     * @return Collection of BulletSPIs
+     */
     private Collection<? extends BulletSPI> getBulletSPIs() {
         return ServiceLoader.load(BulletSPI.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
