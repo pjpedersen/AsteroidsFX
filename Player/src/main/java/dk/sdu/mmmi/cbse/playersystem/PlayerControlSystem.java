@@ -64,7 +64,6 @@ public class PlayerControlSystem implements IEntityProcessingService {
     public void shoot() {
         for (Entity player : world.getEntities(Player.class)) {
             if (gameData.getKeys().isDown(GameKeys.SPACE)) {
-                System.out.println("space pressedddddd");
                 getBulletSPIs().stream().findFirst().ifPresent(
                         spi -> {
                             world.addEntity(spi.createBullet(player, gameData));
