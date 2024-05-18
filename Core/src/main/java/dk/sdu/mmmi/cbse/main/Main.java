@@ -109,12 +109,10 @@ public class Main extends Application {
     }
 
     private void update() {
-
-        // Update
+        // Update components
         for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
             entityProcessorService.process(gameData, world);
         }
-
         for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
            postEntityProcessorService.process(gameData, world);
         }
